@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".ui.FragmentScreenB">
+    <data>
+        <variable
+            name="vm"
+            type="com.example.testyogiyo.ui.viewmodel.MainViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/word_recyclerview"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            items = "@{vm.resultState}"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/list_item"
+            app:dividerColor ="@{@color/purple_500}"
+            app:dividerHeight="@{@dimen/recycler_divider_height}"
+            app:dividerPadding="5dp"
+            />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+        <variable
+            name="userInfo"
+            type="com.example.testyogiyo.data.UserInfo" />
+
+    </data>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="100dp"
+        android:layout_margin="10dp"
+        >
+
+        <ImageView
+            android:id="@+id/itemImage"
+            imgUrl="@{userInfo.img}"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/itemId"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@{userInfo.id}"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/itemImage"
+            tools:text="홍길동"
+            android:layout_marginLeft="10dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/itemBookLike"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@{userInfo.like ? @color/purple_700 : @color/gray}"
+            android:gravity="center"
+            android:insetLeft="20dp"
+            android:insetTop="20dp"
+            android:insetRight="20dp"
+            android:insetBottom="20dp"
+            android:text="좋아요"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="좋아요" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>
