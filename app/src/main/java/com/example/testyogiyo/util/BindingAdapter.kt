@@ -61,6 +61,7 @@ fun getGlideRequestOption(imageName: String) =
 
 @BindingAdapter("imgUrl")
 fun ImageView.loadThumbnail(thumbnail: String?) {
+    Log.d("sechan", "loadThumbnail: $thumbnail")
     if (thumbnail == null) {
         return
     }

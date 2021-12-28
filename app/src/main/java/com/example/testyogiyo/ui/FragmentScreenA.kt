@@ -41,10 +41,14 @@ class FragmentScreenA : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.wordRecyclerview.adapter = userAdapter
+        userAdapter.onClickLikeBtn = {
+            Log.d("sechan", "onViewCreated: $it")
+        }
     }
 
     companion object {
        @JvmStatic
         fun newInstance()=FragmentScreenA()
     }
+
 }

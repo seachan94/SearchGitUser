@@ -37,7 +37,7 @@
             android:layout_marginLeft="10dp" />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/itemBookLike"
+            android:id="@+id/itemLike"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:backgroundTint="@{userInfo.like ? @color/purple_700 : @color/gray}"

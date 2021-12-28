@@ -1,7 +1,9 @@
 package com.example.testyogiyo.ui.adapter
 
 
+import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -12,7 +14,7 @@ import javax.inject.Inject
 
 class UserAdapter @Inject constructor():
     ListAdapter<UserInfo, UserAdapter.SearchListHolder>(DiffCallback){
-
+    var onClickLikeBtn: ((Int) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchListHolder {
         return SearchListHolder(
@@ -34,9 +36,14 @@ class UserAdapter @Inject constructor():
         RecyclerView.ViewHolder(binding.root){
             fun bind(user : UserInfo, position : Int){
                 binding.apply{
+                    this.userInfo = user
 
+                    this.itemLike.setOnClickListener {
+                        onClickLikeBtn?.invoke(position)
+                    }
                 }
             }
+
         }
 
     object DiffCallback : DiffUtil.ItemCallback<UserInfo>(){
