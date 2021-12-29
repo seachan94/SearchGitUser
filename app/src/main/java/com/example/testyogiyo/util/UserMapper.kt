@@ -14,7 +14,7 @@ object UserMapper {
                     it.avatar_url,
                     it.login,
                 )
-            }
+            } as ArrayList<UserInfo>
         )
 
     }

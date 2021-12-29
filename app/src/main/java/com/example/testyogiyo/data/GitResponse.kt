@@ -1,5 +1,7 @@
 package com.example.testyogiyo.data
 
+import com.example.testyogiyo.data.local.UserEntity
+
 data class GitResponse(
     val incomplete_results: Boolean,
     val items: List<Item>,
@@ -29,12 +31,18 @@ data class Item(
 
 data class Users(
     val total_count: Int,
-    val user : List<UserInfo>
-
+    val user : ArrayList<UserInfo>
 )
 
 data class UserInfo(
     val img : String,
     val id : String,
-    val isLike : Boolean = false
-)
+    var isLike : Boolean = false
+){
+    fun toEntitiy()=
+        UserEntity(
+            img = img,
+            id = id,
+            isLike = isLike
+        )
+}

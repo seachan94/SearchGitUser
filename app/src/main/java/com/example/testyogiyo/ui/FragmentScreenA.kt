@@ -7,14 +7,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
-import com.example.testyogiyo.R
 import com.example.testyogiyo.databinding.FragmentScreenABinding
 import com.example.testyogiyo.ui.adapter.UserAdapter
 import com.example.testyogiyo.ui.viewmodel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import dagger.hilt.android.scopes.FragmentScoped
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -42,7 +38,11 @@ class FragmentScreenA : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.wordRecyclerview.adapter = userAdapter
         userAdapter.onClickLikeBtn = {
-            Log.d("sechan", "onViewCreated: $it")
+            val isLike = !mainViewModel.userData.value?.get(it)?.isLike!!
+            val changeUser = mainViewModel.userData.value?.get(it)
+            changeUser!!.isLike = isLike
+            mainViewModel.toggleUserDataLike(it,isLike,false)
+            changeUser
         }
     }
 

@@ -2,11 +2,14 @@ package com.example.testyogiyo.util
 
 import android.graphics.Color
 import android.util.Log
+import android.view.View
 import android.widget.ImageView
 import androidx.annotation.ColorInt
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.BindingAdapter
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
+import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -18,33 +21,22 @@ import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.signature.ObjectKey
 import com.example.testyogiyo.R
 import com.example.testyogiyo.data.NetworkStatus
+import com.example.testyogiyo.data.UserInfo
+import com.example.testyogiyo.data.local.UserEntity
+import com.google.android.material.button.MaterialButton
 import com.google.android.material.tabs.TabLayout
-
-@BindingAdapter(
-    value = ["dividerHeight", "dividerPadding", "dividerColor"],
-    requireAll = false
-)
-fun RecyclerView.setDivider(
-    dividerHeight: Float?,
-    dividerPadding: Float?,
-    @ColorInt dividerColor: Int?
-) {
-
-    val decoration = Decoration(
-        height = dividerHeight ?: 0f,
-        padding = dividerPadding ?: 0f,
-        color = dividerColor ?: Color.TRANSPARENT,
-    )
-    addItemDecoration(decoration)
-}
 
 @BindingAdapter("items")
 fun <T> RecyclerView.setItems(networkStatus: NetworkStatus<Any>) {
-    Log.d("sechan", "setItems: $networkStatus")
+
     if (networkStatus is NetworkStatus.Success) {
-        Log.d("sechan", "setItems: ${networkStatus.data}")
         (adapter as? ListAdapter<T, *>)?.submitList(networkStatus.data as MutableList<T>?)
     }
+}
+
+@BindingAdapter("localitems")
+fun <T> RecyclerView.setItems(localUserData: LiveData<List<UserInfo>>) {
+    (adapter as? ListAdapter<T, *>)?.submitList(localUserData.value as MutableList<T>?)
 }
 
 @BindingAdapter("addOnTabSelectedListener")
@@ -61,7 +53,6 @@ fun getGlideRequestOption(imageName: String) =
 
 @BindingAdapter("imgUrl")
 fun ImageView.loadThumbnail(thumbnail: String?) {
-    Log.d("sechan", "loadThumbnail: $thumbnail")
     if (thumbnail == null) {
         return
     }

@@ -14,7 +14,8 @@ import javax.inject.Inject
 
 class UserAdapter @Inject constructor():
     ListAdapter<UserInfo, UserAdapter.SearchListHolder>(DiffCallback){
-    var onClickLikeBtn: ((Int) -> Unit)? = null
+    var onClickLikeBtn: ((Int) -> UserInfo)? = null
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchListHolder {
         return SearchListHolder(
@@ -32,14 +33,15 @@ class UserAdapter @Inject constructor():
         }
     }
 
+
+
     inner class SearchListHolder(private val binding : ListItemBinding) :
         RecyclerView.ViewHolder(binding.root){
             fun bind(user : UserInfo, position : Int){
                 binding.apply{
                     this.userInfo = user
-
                     this.itemLike.setOnClickListener {
-                        onClickLikeBtn?.invoke(position)
+                        binding.userInfo = onClickLikeBtn?.invoke(position)
                     }
                 }
             }

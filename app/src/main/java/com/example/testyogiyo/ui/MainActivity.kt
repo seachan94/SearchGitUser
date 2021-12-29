@@ -3,6 +3,7 @@ package com.example.testyogiyo.ui
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.example.testyogiyo.R
@@ -30,14 +31,20 @@ class MainActivity : AppCompatActivity() {
         }
 
         setContentView(binding.root)
-
-        Log.d("sechan", "onCreatemain: $viewModel")
-        binding.searchBtn.setOnClickListener {
+        viewModel.searchText.observe(this){
             lifecycleScope.launch {
-                viewModel.requestUser()
+                if(viewModel.checkPage == 0){
+                    Log.d("sechan", "onCreate: $it")
+                    viewModel.requestUser()
+                }
+                else {
+                    lifecycleScope.launch {
+                        viewModel.getUserFromDB()
+                    }
+                }
             }
         }
-        //test 꼭 변경 할 것
+
         viewModel.fragmentLayout.observe(this,{
             val transaction = supportFragmentManager.beginTransaction()
             transaction.replace(R.id.frame_layout,it)

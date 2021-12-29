@@ -24,9 +24,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:listitem="@layout/list_item"
-        app:dividerColor ="@{@color/purple_500}"
-        app:dividerHeight="@{@dimen/recycler_divider_height}"
-        app:dividerPadding="5dp"
         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
