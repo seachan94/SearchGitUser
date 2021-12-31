@@ -1,14 +1,11 @@
 package com.example.testyogiyo.util
 
-import android.graphics.Color
 import android.util.Log
 import android.view.View
 import android.widget.ImageView
-import androidx.annotation.ColorInt
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.BindingAdapter
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentTransaction
+import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -22,8 +19,6 @@ import com.bumptech.glide.signature.ObjectKey
 import com.example.testyogiyo.R
 import com.example.testyogiyo.data.NetworkStatus
 import com.example.testyogiyo.data.UserInfo
-import com.example.testyogiyo.data.local.UserEntity
-import com.google.android.material.button.MaterialButton
 import com.google.android.material.tabs.TabLayout
 
 @BindingAdapter("items")
@@ -63,4 +58,14 @@ fun ImageView.loadThumbnail(thumbnail: String?) {
         .apply(getGlideRequestOption(thumbnail))
         .transform(FitCenter(), RoundedCorners(30))
         .into(this)
+}
+
+@BindingAdapter(
+    value = ["setFragment" , "supportFragment"],
+    requireAll = true
+)
+fun setFragmentInTabLayout( view : View, fragment : Fragment, supportFragment : FragmentManager?){
+    val transaction = supportFragment?.beginTransaction()
+    transaction?.replace(view.id,fragment)
+    transaction?.commit()
 }

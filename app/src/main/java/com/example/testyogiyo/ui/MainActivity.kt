@@ -24,17 +24,18 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //git test
+
         binding = ActivityMainBinding.inflate(layoutInflater).apply{
             vm = viewModel
+            fragment = supportFragmentManager
             lifecycleOwner = this@MainActivity
         }
 
         setContentView(binding.root)
+
         viewModel.searchText.observe(this){
             lifecycleScope.launch {
-                if(viewModel.checkPage == 0){
-                    Log.d("sechan", "onCreate: $it")
+                if(viewModel.fragmentLayout.value == viewModel.listOfFragment[0]){
                     viewModel.requestUser()
                 }
                 else {
@@ -45,11 +46,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        viewModel.fragmentLayout.observe(this,{
-            val transaction = supportFragmentManager.beginTransaction()
-            transaction.replace(R.id.frame_layout,it)
-            transaction.commit()
-        })
     }
 
 }
