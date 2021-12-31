@@ -24,7 +24,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        //git test
         binding = ActivityMainBinding.inflate(layoutInflater).apply{
             vm = viewModel
             lifecycleOwner = this@MainActivity
