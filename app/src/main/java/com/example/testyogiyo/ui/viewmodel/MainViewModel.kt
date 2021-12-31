@@ -25,6 +25,7 @@ class MainViewModel @Inject constructor(
 ) : ViewModel() {
 
     val searchText = MutableLiveData("")
+    //val searchText = MutableStateFlow("")
 
     private var _userData = MutableLiveData(arrayListOf<UserInfo>())
     val userData: LiveData<ArrayList<UserInfo>> get() = _userData
@@ -38,22 +39,16 @@ class MainViewModel @Inject constructor(
     val localUserData: LiveData<List<UserInfo>> get() = _localUserData
 
 
-    var checkPage = 0
-    var fragmentLayout: MutableLiveData<Fragment> = MutableLiveData(FragmentScreenA.newInstance())
+    //tab layout에 따른 fragment 처리
+    val listOfFragment = listOf(FragmentScreenA.newInstance(),FragmentScreenB.newInstance())
+    var fragmentLayout: MutableLiveData<Fragment> = MutableLiveData(
+        listOfFragment[0])
+
     val tabSelectedListener = object : TabLayout.OnTabSelectedListener {
         override fun onTabSelected(tab: TabLayout.Tab?) {
-            when (tab?.position) {
-                0 -> {
-                    checkPage=0
-                    fragmentLayout.value = FragmentScreenA.newInstance()
-                }
-                1 -> {
-                    checkPage=1
-                    fragmentLayout.value = FragmentScreenB.newInstance()
-                }
-            }
+            //tab이 null 나올 수 잇나?
+            fragmentLayout.value = listOfFragment[tab?.position!!]
         }
-
         override fun onTabUnselected(tab: TabLayout.Tab?) {}
         override fun onTabReselected(tab: TabLayout.Tab?) {}
     }
