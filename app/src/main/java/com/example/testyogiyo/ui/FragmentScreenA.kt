@@ -42,6 +42,7 @@ class FragmentScreenA : Fragment() {
             val isLike = !mainViewModel.userData.value?.get(it)?.isLike!!
             val changeUser = mainViewModel.userData.value?.get(it)
             changeUser!!.isLike = isLike
+
             mainViewModel.toggleUserDataLike(it,isLike,false)
             changeUser
         }

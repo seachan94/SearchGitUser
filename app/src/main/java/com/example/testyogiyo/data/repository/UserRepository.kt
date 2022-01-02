@@ -12,9 +12,10 @@ interface UserRepository {
 
     fun getSearchUser(id : String) : Flow<NetworkStatus<Users>>
 
-    fun getAllUsersFromDb() : Flow<DatabaseStatus.Success<List<UserEntity>>>
+    fun getAllUsersFromDb() : Flow<DatabaseStatus.Success<List<UserInfo>>>
     fun getUserFromDb(id : String) : Flow<DatabaseStatus.Success<List<UserEntity>>>
-    suspend fun insertUserToDb(user : UserEntity)
-    suspend fun deleteUserFromDb(id : String)
+
+    fun insertUserToDb(user : UserEntity) : Flow<DatabaseStatus.Success<ArrayList<UserInfo>>>
+    fun deleteUserFromDb(id : String) : Flow<DatabaseStatus.Success<ArrayList<UserInfo>>>
 
 }

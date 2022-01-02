@@ -51,7 +51,8 @@ class FragmentScreenB : Fragment() {
             val changeUser = mainViewModel.localUserData.value?.get(it)
             changeUser!!.isLike = isLike
             mainViewModel.toggleUserDataLike(it,isLike,true)
-            changeUser
+            userAdapter.notifyDataSetChanged()
+            changeUser!!
         }
     }
 

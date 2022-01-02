@@ -35,8 +35,8 @@ class MainViewModel @Inject constructor(
     val resultState: StateFlow<NetworkStatus<List<UserInfo>>> get() = _resultState
 
 
-    private var _localUserData = MutableLiveData(emptyList<UserInfo>())
-    val localUserData: LiveData<List<UserInfo>> get() = _localUserData
+    private var _localUserData = MutableLiveData(arrayListOf<UserInfo>())
+    val localUserData: LiveData<ArrayList<UserInfo>> get() = _localUserData
 
 
     //tab layout에 따른 fragment 처리
@@ -57,7 +57,6 @@ class MainViewModel @Inject constructor(
         viewModelScope.launch {
             getAllUserFromDB()
         }
-        Log.d("sechan", ": ${userData.value}")
     }
 
     suspend fun requestUser() =
@@ -88,37 +87,36 @@ class MainViewModel @Inject constructor(
             }
         }
 
-    private fun insertUser(position: Int){
+    private suspend fun insertUser(position: Int){
         val insertUser = userData.value!!.get(position).toEntitiy()
-        viewModelScope.launch {
-            githubApi.insertUserToDb(insertUser)
+        githubApi.insertUserToDb(insertUser).collect{
+            _localUserData.value = it.data
         }
     }
 
-    private fun deleteUserFromDB(position: Int){
+    private suspend fun deleteUserFromDB(position: Int){
         val id : String = localUserData.value!!.get(position).id
-        viewModelScope.launch {
-            githubApi.deleteUserFromDb(id)
+        githubApi.deleteUserFromDb(id).collect{
+            _localUserData.value = it.data
         }
     }
 
 
     private suspend fun getAllUserFromDB() =
         githubApi.getAllUsersFromDb().collect {
-            _localUserData.value = it.data!!.map {
-                it.toUserInfo()
-            }
+            _localUserData.value = it.data!! as ArrayList<UserInfo>
         }
 
     suspend fun getUserFromDB() =
         githubApi.getUserFromDb(searchText.value!!).collect {
             _localUserData.value = it.data!!.map{
                 it.toUserInfo()
-            }
+            } as ArrayList<UserInfo>
         }
 
 
     fun toggleUserDataLike( position: Int, isLike : Boolean, isLocal : Boolean){
+
         if(!isLocal) {
             _userData.value!!.get(position).isLike = isLike
         }else{
@@ -132,9 +130,13 @@ class MainViewModel @Inject constructor(
         }
 
         if(isLike){
-            insertUser(position)
+            viewModelScope.launch{
+                insertUser(position)
+            }
         }else{
-            deleteUserFromDB(position)
+            viewModelScope.launch{
+                deleteUserFromDB(position)
+            }
         }
     }
 
