@@ -37,6 +37,7 @@ class FragmentScreenA : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.wordRecyclerview.adapter = userAdapter
+
         userAdapter.onClickLikeBtn = {
             val isLike = !mainViewModel.userData.value?.get(it)?.isLike!!
             val changeUser = mainViewModel.userData.value?.get(it)
@@ -44,6 +45,7 @@ class FragmentScreenA : Fragment() {
             mainViewModel.toggleUserDataLike(it,isLike,false)
             changeUser
         }
+
     }
 
     companion object {

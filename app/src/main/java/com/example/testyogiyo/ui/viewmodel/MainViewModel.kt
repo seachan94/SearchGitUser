@@ -57,6 +57,7 @@ class MainViewModel @Inject constructor(
         viewModelScope.launch {
             getAllUserFromDB()
         }
+        Log.d("sechan", ": ${userData.value}")
     }
 
     suspend fun requestUser() =
@@ -87,17 +88,27 @@ class MainViewModel @Inject constructor(
             }
         }
 
-    suspend fun insertUserToDB(position: Int) =
-        dao.insertUser(userData.value!!.get(position).toEntitiy())
+    private fun insertUser(position: Int){
+        val insertUser = userData.value!!.get(position).toEntitiy()
+        viewModelScope.launch {
+            githubApi.insertUserToDb(insertUser)
+        }
+    }
 
-    suspend fun getAllUserFromDB() =
+    private fun deleteUserFromDB(position: Int){
+        val id : String = localUserData.value!!.get(position).id
+        viewModelScope.launch {
+            githubApi.deleteUserFromDb(id)
+        }
+    }
+
+
+    private suspend fun getAllUserFromDB() =
         githubApi.getAllUsersFromDb().collect {
             _localUserData.value = it.data!!.map {
                 it.toUserInfo()
             }
         }
-    suspend fun deleteUserFromDB(position: Int)=
-        dao.deleteUser(localUserData.value!!.get(position).id)
 
     suspend fun getUserFromDB() =
         githubApi.getUserFromDb(searchText.value!!).collect {
@@ -121,19 +132,13 @@ class MainViewModel @Inject constructor(
         }
 
         if(isLike){
-            viewModelScope.launch {
-                insertUserToDB(position)
-            }
+            insertUser(position)
         }else{
-           viewModelScope.launch {
-               deleteUserFromDB(position)
-           }
+            deleteUserFromDB(position)
         }
     }
 
-    fun setUserDataLike(position: Int,isLike: Boolean) {
-        _userData.value?.get(position)!!.isLike = isLike
-    }
+
 }
 
 

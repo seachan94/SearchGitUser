@@ -39,9 +39,7 @@ class FragmentScreenB : Fragment() {
             vm = mainViewModel
             lifecycleOwner = this@FragmentScreenB
         }
-        lifecycleScope.launch {
-            mainViewModel.getAllUserFromDB()
-        }
+
         return binding.root
     }
 

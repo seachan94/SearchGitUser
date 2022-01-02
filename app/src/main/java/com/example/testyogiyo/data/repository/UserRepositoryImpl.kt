@@ -2,6 +2,7 @@ package com.example.testyogiyo.data.repository
 
 
 import android.util.Log
+import androidx.annotation.WorkerThread
 import com.example.testyogiyo.data.DatabaseStatus
 import com.example.testyogiyo.data.GitResponse
 import com.example.testyogiyo.data.NetworkStatus
@@ -51,6 +52,14 @@ class UserRepositoryImpl @Inject constructor(
     }.catch { e->
         emit(DatabaseStatus.Success(arrayListOf()))
     }.flowOn(Dispatchers.IO)
+
+    override suspend fun insertUserToDb(user: UserEntity) {
+        databaseDao.insertUser(user)
+    }
+
+    override suspend fun deleteUserFromDb(id: String) {
+        databaseDao.deleteUser(id)
+    }
 
 
 }
