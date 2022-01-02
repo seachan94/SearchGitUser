@@ -11,7 +11,6 @@ import com.example.testyogiyo.data.local.UserEntity
 import com.example.testyogiyo.data.remote.api.GithubApi
 import com.example.testyogiyo.util.UserMapper
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
@@ -21,6 +20,8 @@ class UserRepositoryImpl @Inject constructor(
     private val githubApi : GithubApi,
     private val databaseDao : UserDao
 ) :UserRepository{
+
+    var localUser = arrayListOf<UserInfo>()
 
     override fun getSearchUser(id: String)=flow {
 
@@ -38,11 +39,16 @@ class UserRepositoryImpl @Inject constructor(
 
 
 
-    override fun getAllUsersFromDb()=flow {
-        val response = databaseDao.getAllUser()
-        emit(DatabaseStatus.Success(response))
+    override fun getAllUsersFromDb() = flow {
+        localUser =  databaseDao.getAllUser().map {
+            it.toUserInfo()
+        } as ArrayList<UserInfo>
+
+        Log.d("sechan", "getAllUsersFromDb: ${localUser}")
+        emit(DatabaseStatus.Success(localUser))
+
     }.catch { e->
-        emit(DatabaseStatus.Success(emptyList()))
+        emit(DatabaseStatus.Success(arrayListOf()))
     }.flowOn(Dispatchers.IO)
 
     override fun getUserFromDb(id : String)= flow{
@@ -50,6 +56,25 @@ class UserRepositoryImpl @Inject constructor(
         emit(DatabaseStatus.Success(response))
     }.catch { e->
         emit(DatabaseStatus.Success(arrayListOf()))
+    }.flowOn(Dispatchers.IO)
+
+    override fun insertUserToDb(user: UserEntity) = flow{
+        databaseDao.insertUser(user)
+        localUser.add(user.toUserInfo())
+        Log.d("sechan", "insertUserToDb: $localUser")
+        emit(DatabaseStatus.Success(localUser))
+    }.catch { e->
+        emit(DatabaseStatus.Success(arrayListOf()))
+    }.flowOn(Dispatchers.IO)
+
+    override fun deleteUserFromDb(id: String) = flow{
+        databaseDao.deleteUser(id)
+        val userInfo = localUser.find { it.id == id }
+        localUser.remove(userInfo)
+        Log.d("sechan", "deleteUserFromDb: $localUser")
+        emit(DatabaseStatus.Success(localUser))
+    }.catch{e->
+        emit(DatabaseStatus.Success(localUser))
     }.flowOn(Dispatchers.IO)
 
 

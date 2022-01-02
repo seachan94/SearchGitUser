@@ -42,6 +42,7 @@ class UserAdapter @Inject constructor():
                     this.userInfo = user
                     this.itemLike.setOnClickListener {
                         binding.userInfo = onClickLikeBtn?.invoke(position)
+                        Log.d("sechan", "bind: $adapterPosition $layoutPosition")
                     }
                 }
             }
@@ -52,8 +53,10 @@ class UserAdapter @Inject constructor():
         override fun areItemsTheSame(oldItem: UserInfo, newItem: UserInfo): Boolean =
             oldItem.hashCode() == newItem.hashCode()
 
-        override fun areContentsTheSame(oldItem: UserInfo, newItem: UserInfo): Boolean =
-            oldItem == newItem
+        override fun areContentsTheSame(oldItem: UserInfo, newItem: UserInfo): Boolean {
+            return oldItem == newItem
+        }
+
 
     }
 

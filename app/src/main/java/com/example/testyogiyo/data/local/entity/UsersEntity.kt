@@ -10,7 +10,7 @@ data class UserEntity(
     @PrimaryKey val id : String,
     val isLike : Boolean
 ){
-    fun toUserInfo()=
+    fun toUserInfo() : UserInfo=
         UserInfo(
             img =img,
             id =id,

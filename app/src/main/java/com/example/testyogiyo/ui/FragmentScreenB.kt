@@ -39,9 +39,7 @@ class FragmentScreenB : Fragment() {
             vm = mainViewModel
             lifecycleOwner = this@FragmentScreenB
         }
-        lifecycleScope.launch {
-            mainViewModel.getAllUserFromDB()
-        }
+
         return binding.root
     }
 
@@ -53,7 +51,8 @@ class FragmentScreenB : Fragment() {
             val changeUser = mainViewModel.localUserData.value?.get(it)
             changeUser!!.isLike = isLike
             mainViewModel.toggleUserDataLike(it,isLike,true)
-            changeUser
+            userAdapter.notifyDataSetChanged()
+            changeUser!!
         }
     }
 

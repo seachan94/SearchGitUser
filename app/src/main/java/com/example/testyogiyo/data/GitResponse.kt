@@ -43,6 +43,6 @@ data class UserInfo(
         UserEntity(
             img = img,
             id = id,
-            isLike = isLike
+            isLike = true
         )
 }

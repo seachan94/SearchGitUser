@@ -7,6 +7,7 @@ import androidx.databinding.BindingAdapter
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -30,8 +31,9 @@ fun <T> RecyclerView.setItems(networkStatus: NetworkStatus<Any>) {
 }
 
 @BindingAdapter("localitems")
-fun <T> RecyclerView.setItems(localUserData: LiveData<List<UserInfo>>) {
+fun <T> RecyclerView.setItems(localUserData: LiveData<ArrayList<UserInfo>>) {
     (adapter as? ListAdapter<T, *>)?.submitList(localUserData.value as MutableList<T>?)
+
 }
 
 @BindingAdapter("addOnTabSelectedListener")
