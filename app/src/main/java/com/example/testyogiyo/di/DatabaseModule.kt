@@ -2,8 +2,8 @@ package com.example.testyogiyo.di
 
 import android.content.Context
 import androidx.room.Room
-import com.example.testyogiyo.data.local.Dao.UserDao
-import com.example.testyogiyo.data.local.UserInfoDatabase
+import com.example.testyogiyo.data.database.dao.UserDao
+import com.example.testyogiyo.data.database.UserInfoDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -17,15 +17,15 @@ object DatabaseModule {
 
     @Singleton
     @Provides
-    fun provideAppDataBase(@ApplicationContext context: Context) :UserInfoDatabase =
+    fun provideAppDataBase(@ApplicationContext context: Context) : UserInfoDatabase =
         Room.databaseBuilder(
-            context.applicationContext,
+            context,
             UserInfoDatabase::class.java,
             "user.db"
         ).build()
 
     @Singleton
     @Provides
-    fun provideUserDao(userInfoDatabase : UserInfoDatabase) :UserDao =
+    fun provideUserDao(userInfoDatabase : UserInfoDatabase) : UserDao =
         userInfoDatabase.userDao
 }

@@ -1,12 +1,10 @@
-package com.example.testyogiyo.data.local.Dao
+package com.example.testyogiyo.data.database.dao
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.example.testyogiyo.data.UserInfo
-import com.example.testyogiyo.data.local.UserEntity
-import retrofit2.http.DELETE
+import com.example.testyogiyo.data.database.entity.UserEntity
 
 @Dao
 interface UserDao {
@@ -18,10 +16,6 @@ interface UserDao {
     suspend fun deleteUser(id:String)
 
     @Query("SELECT * FROM user WHERE id LIKE '%' || :id || '%'")
-    suspend fun getUser(id : String) : List<UserEntity>
-
-    @Query("SELECT * FROM user")
-    suspend fun getAllUser() : List<UserEntity>
-
+    suspend fun findUser(id : String) : List<UserEntity>
 
 }

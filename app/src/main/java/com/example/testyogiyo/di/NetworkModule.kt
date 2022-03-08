@@ -1,6 +1,6 @@
 package com.example.testyogiyo.di
 
-import com.example.testyogiyo.data.remote.api.GithubApi
+import com.example.testyogiyo.data.remote.GithubApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -19,7 +19,6 @@ object NetworkModule {
     @Provides
     fun provideRetrofit() : Retrofit =
         Retrofit.Builder().apply{
-            addConverterFactory(ScalarsConverterFactory.create()) // test
             addConverterFactory(GsonConverterFactory.create())
             baseUrl("https://api.github.com/")
         }.build()

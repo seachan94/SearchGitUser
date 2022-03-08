@@ -1,9 +1,11 @@
 package com.example.testyogiyo.di
 
-import com.example.testyogiyo.data.local.Dao.UserDao
-import com.example.testyogiyo.data.remote.api.GithubApi
-import com.example.testyogiyo.data.repository.UserRepository
-import com.example.testyogiyo.data.repository.UserRepositoryImpl
+import com.example.testyogiyo.data.database.dao.UserDao
+import com.example.testyogiyo.data.database.repository.LocalUserRepository
+import com.example.testyogiyo.data.database.repository.LocalUserRepositoryImpl
+import com.example.testyogiyo.data.remote.GithubApi
+import com.example.testyogiyo.data.remote.repository.UserRepository
+import com.example.testyogiyo.data.remote.repository.UserRepositoryImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -17,7 +19,12 @@ class RepositoryModule {
 
     @Provides
     @Singleton
-    fun provideGithubRepository( api : GithubApi,dao : UserDao) : UserRepository{
-        return UserRepositoryImpl(api,dao)
+    fun providesRemoteUserRepository(api : GithubApi) : UserRepository {
+        return UserRepositoryImpl(api)
     }
+
+    @Provides
+    @Singleton
+    fun providesLocalUserRepository(dao : UserDao) : LocalUserRepository =
+        LocalUserRepositoryImpl(dao)
 }

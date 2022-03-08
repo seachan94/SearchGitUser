@@ -1,15 +1,14 @@
 package com.example.testyogiyo.ui.viewmodel
 
-import android.util.Log
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.testyogiyo.data.NetworkStatus
+import com.example.testyogiyo.data.meta.ResultState
 import com.example.testyogiyo.data.UserInfo
-import com.example.testyogiyo.data.local.Dao.UserDao
-import com.example.testyogiyo.data.repository.UserRepository
+import com.example.testyogiyo.data.database.dao.UserDao
+import com.example.testyogiyo.data.remote.repository.UserRepository
 import com.example.testyogiyo.ui.FragmentScreenA
 import com.example.testyogiyo.ui.FragmentScreenB
 import com.google.android.material.tabs.TabLayout
@@ -31,15 +30,17 @@ class MainViewModel @Inject constructor(
     val userData: LiveData<ArrayList<UserInfo>> get() = _userData
 
     private var _resultState =
-        MutableStateFlow<NetworkStatus<List<UserInfo>>>(NetworkStatus.Success(null))
-    val resultState: StateFlow<NetworkStatus<List<UserInfo>>> get() = _resultState
+        MutableStateFlow<ResultState<List<UserInfo>>>(ResultState.Success(null))
+    val resultState: StateFlow<ResultState<List<UserInfo>>> get() = _resultState
 
 
+    //userEntity
     private var _localUserData = MutableLiveData(arrayListOf<UserInfo>())
     val localUserData: LiveData<ArrayList<UserInfo>> get() = _localUserData
 
 
     //tab layout에 따른 fragment 처리
+    //의존성 제
     val listOfFragment = listOf(FragmentScreenA.newInstance(),FragmentScreenB.newInstance())
     var fragmentLayout: MutableLiveData<Fragment> = MutableLiveData(
         listOfFragment[0])
@@ -63,16 +64,16 @@ class MainViewModel @Inject constructor(
         githubApi.getSearchUser(searchText.value.toString()).stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000L),
-            initialValue = NetworkStatus.Loading
+            initialValue = ResultState.Loading
         ).collectLatest {
             when (it) {
-                is NetworkStatus.Loading -> {
-                    _resultState.value = NetworkStatus.Loading
+                is ResultState.Loading -> {
+                    _resultState.value = ResultState.Loading
                 }
-                is NetworkStatus.Error -> {
-                    _resultState.value = NetworkStatus.Error(it.message!!)
+                is ResultState.Error -> {
+                    _resultState.value = ResultState.Error(it.message!!)
                 }
-                is NetworkStatus.Success -> {
+                is ResultState.Success -> {
                     _userData.value = it.data?.user
                     //api받아 왔을 떄 db 값과 비교
                     localUserData.value?.forEach { db->
@@ -82,7 +83,7 @@ class MainViewModel @Inject constructor(
                             }
                         }
                     }
-                    _resultState.value = NetworkStatus.Success(_userData.value)
+                    _resultState.value = ResultState.Success(_userData.value)
                 }
             }
         }
@@ -97,7 +98,7 @@ class MainViewModel @Inject constructor(
     private suspend fun deleteUserFromDB(position: Int){
         val id : String = localUserData.value!!.get(position).id
         githubApi.deleteUserFromDb(id).collect{
-            _localUserData.value = it.data
+            _localUserData.value = it.
         }
     }
 
@@ -122,11 +123,13 @@ class MainViewModel @Inject constructor(
         }else{
             val changedLocalUser = _localUserData.value!!.get(position)
             localUserData.value!!.get(position).isLike = isLike
-            userData.value?.forEachIndexed  { idx,api->
-                if (changedLocalUser.id == api.id){
-                    _userData.value!![idx] = changedLocalUser
-                }
-            }
+            //filter로 변경
+
+//            userData.value?.forEachIndexed  { idx,api->
+//                if (changedLocalUser.id == api.id){
+//                    _userData.value!![idx] = changedLocalUser
+//                }
+//            }
         }
 
         if(isLike){
