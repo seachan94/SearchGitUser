@@ -1,13 +1,11 @@
 package com.example.testyogiyo.util
 
-import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -18,15 +16,15 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.signature.ObjectKey
 import com.example.testyogiyo.R
-import com.example.testyogiyo.data.NetworkStatus
+import com.example.testyogiyo.data.meta.ResultState
 import com.example.testyogiyo.data.UserInfo
 import com.google.android.material.tabs.TabLayout
 
 @BindingAdapter("items")
-fun <T> RecyclerView.setItems(networkStatus: NetworkStatus<Any>) {
+fun <T> RecyclerView.setItems(resultState: ResultState<Any>) {
 
-    if (networkStatus is NetworkStatus.Success) {
-        (adapter as? ListAdapter<T, *>)?.submitList(networkStatus.data as MutableList<T>?)
+    if (resultState is ResultState.Success) {
+        (adapter as? ListAdapter<T, *>)?.submitList(resultState.data as MutableList<T>?)
     }
 }
 

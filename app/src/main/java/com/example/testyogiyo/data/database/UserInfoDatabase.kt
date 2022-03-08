@@ -1,8 +1,9 @@
-package com.example.testyogiyo.data.local
+package com.example.testyogiyo.data.database
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import com.example.testyogiyo.data.local.Dao.UserDao
+import com.example.testyogiyo.data.database.entity.UserEntity
+import com.example.testyogiyo.data.database.dao.UserDao
 
 
 @Database(

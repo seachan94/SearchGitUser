@@ -23,19 +23,19 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class FragmentScreenB : Fragment() {
 
-    lateinit var binding : FragmentScreenBBinding
-    private val mainViewModel : MainViewModel by activityViewModels()
+    lateinit var binding: FragmentScreenBBinding
+    private val mainViewModel: MainViewModel by activityViewModels()
 
 
     @Inject
-    lateinit var userAdapter : UserAdapter
+    lateinit var userAdapter: UserAdapter
 
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
-        binding = FragmentScreenBBinding.inflate(inflater,container,false).apply{
+        binding = FragmentScreenBBinding.inflate(inflater, container, false).apply {
             vm = mainViewModel
             lifecycleOwner = this@FragmentScreenB
         }
@@ -47,17 +47,19 @@ class FragmentScreenB : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.wordRecyclerview.adapter = userAdapter
         userAdapter.onClickLikeBtn = {
-            val isLike = !mainViewModel.localUserData.value?.get(it)?.isLike!!
-            val changeUser = mainViewModel.localUserData.value?.get(it)
-            changeUser!!.isLike = isLike
-            mainViewModel.toggleUserDataLike(it,isLike,true)
-            userAdapter.notifyDataSetChanged()
+            val isLike = mainViewModel.localUserData.value?.get(it)?.isLike!!.not()
+            mainViewModel.toggleUserDataLike(it, isLike, true)
+
+            val changeUser = mainViewModel.localUserData.value?.get(it).apply {
+                this?.isLike = isLike
+            }
+
             changeUser!!
         }
     }
 
     companion object {
         @JvmStatic
-        fun newInstance() =FragmentScreenB()
+        fun newInstance() = FragmentScreenB()
     }
 }

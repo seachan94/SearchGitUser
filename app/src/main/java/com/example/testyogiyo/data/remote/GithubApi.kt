@@ -1,8 +1,6 @@
-package com.example.testyogiyo.data.remote.api
+package com.example.testyogiyo.data.remote
 
-import com.example.testyogiyo.data.GitResponse
-import kotlinx.coroutines.flow.Flow
-import retrofit2.Call
+import com.example.testyogiyo.data.remote.response.GitResponse
 import retrofit2.http.GET
 import retrofit2.http.Query
 
