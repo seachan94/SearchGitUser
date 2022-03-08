@@ -8,17 +8,17 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.example.testyogiyo.data.UserInfo
+import com.example.testyogiyo.data.remote.response.User
 import com.example.testyogiyo.databinding.ListItemBinding
 import javax.inject.Inject
 
 class UserAdapter @Inject constructor():
-    ListAdapter<UserInfo, UserAdapter.SearchListHolder>(DiffCallback){
-    var onClickLikeBtn: ((Int) -> UserInfo)? = null
+    ListAdapter<User, UserViewHolder>(DiffCallback){
+    var onClickLikeBtn: ((Int) -> User)? = null
 
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserViewHolder {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchListHolder {
-        return SearchListHolder(
+        return UserViewHolder(
             ListItemBinding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,
@@ -27,38 +27,18 @@ class UserAdapter @Inject constructor():
         )
     }
 
-    override fun onBindViewHolder(holder: SearchListHolder, position: Int) {
+    override fun onBindViewHolder(holder: UserViewHolder, position: Int) {
         getItem(position)?.let{
             holder.bind(it,position)
         }
     }
 
+    object DiffCallback : DiffUtil.ItemCallback<User>(){
+        override fun areItemsTheSame(oldItem: User, newItem: User): Boolean =
+            oldItem.login == newItem.login
 
-
-    inner class SearchListHolder(private val binding : ListItemBinding) :
-        RecyclerView.ViewHolder(binding.root){
-            fun bind(user : UserInfo, position : Int){
-                binding.apply{
-                    this.userInfo = user
-                    this.itemLike.setOnClickListener {
-                        binding.userInfo = onClickLikeBtn?.invoke(position)
-                        Log.d("sechan", "bind: $adapterPosition $layoutPosition")
-                    }
-                }
-            }
-
-        }
-
-    object DiffCallback : DiffUtil.ItemCallback<UserInfo>(){
-        override fun areItemsTheSame(oldItem: UserInfo, newItem: UserInfo): Boolean =
-            oldItem.hashCode() == newItem.hashCode()
-
-        override fun areContentsTheSame(oldItem: UserInfo, newItem: UserInfo): Boolean {
-            return oldItem == newItem
-        }
-
-
+        override fun areContentsTheSame(oldItem: User, newItem: User): Boolean =
+            oldItem==newItem
     }
-
 
 }

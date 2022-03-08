@@ -17,7 +17,6 @@ import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.signature.ObjectKey
 import com.example.testyogiyo.R
 import com.example.testyogiyo.data.meta.ResultState
-import com.example.testyogiyo.data.UserInfo
 import com.google.android.material.tabs.TabLayout
 
 @BindingAdapter("items")
@@ -26,12 +25,6 @@ fun <T> RecyclerView.setItems(resultState: ResultState<Any>) {
     if (resultState is ResultState.Success) {
         (adapter as? ListAdapter<T, *>)?.submitList(resultState.data as MutableList<T>?)
     }
-}
-
-@BindingAdapter("localitems")
-fun <T> RecyclerView.setItems(localUserData: LiveData<ArrayList<UserInfo>>) {
-    (adapter as? ListAdapter<T, *>)?.submitList(localUserData.value as MutableList<T>?)
-
 }
 
 @BindingAdapter("addOnTabSelectedListener")
