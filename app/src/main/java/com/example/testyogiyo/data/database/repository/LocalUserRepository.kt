@@ -10,4 +10,5 @@ interface LocalUserRepository {
     suspend fun insertUser(user : UserEntity)
     suspend fun deleteUser(id : String)
     suspend fun findUser(id : String) : Flow<ResultState<List<UserEntity>>>
+    suspend fun getAllUser() : Flow<List<UserEntity>>
 }

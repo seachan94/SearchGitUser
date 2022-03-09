@@ -22,6 +22,9 @@ class MainActivity : AppCompatActivity() {
     private val apiFragment by lazy { ApiFragment.newInstance() }
     private val localFragment by lazy{ LocalFragment.newInstance() }
 
+    //어떠한 Tab (fragment)가 attach 되어 있는지 확인 한다.
+    private var attachFragmentPosition = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -48,6 +51,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun replaceView(position : Int){
+        attachFragmentPosition = position
         when(position){
             0->{
                 supportFragmentManager.beginTransaction()
@@ -65,8 +69,10 @@ class MainActivity : AppCompatActivity() {
     private fun observeSearchText()  = lifecycleScope.launchWhenResumed {
         searchText.debounce(500L).collectLatest {
             if(it.isNotEmpty()){
-                apiFragment.findUserFromRemote(it)
-                localFragment.findUserFromLocal(it)
+                when(attachFragmentPosition){
+                    0-> apiFragment.findUserFromRemote(it)
+                    1->localFragment.findUserFromLocal(it)
+                }
             }
         }
     }
