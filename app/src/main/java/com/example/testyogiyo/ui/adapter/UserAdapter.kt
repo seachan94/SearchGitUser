@@ -10,35 +10,40 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.testyogiyo.data.remote.response.User
 import com.example.testyogiyo.databinding.ListItemBinding
+import dagger.Provides
 import javax.inject.Inject
+import javax.inject.Singleton
 
-class UserAdapter @Inject constructor():
-    ListAdapter<User, UserViewHolder>(DiffCallback){
-    var onClickLikeBtn: ((Int) -> User)? = null
+
+class UserAdapter @Inject constructor(
+): ListAdapter<User, UserViewHolder>(DiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserViewHolder {
 
-        return UserViewHolder(
-            ListItemBinding.inflate(
-                LayoutInflater.from(parent.context),
-                parent,
-                false
-            )
+        val binding = ListItemBinding.inflate(
+            LayoutInflater.from(parent.context),
+            parent,
+            false
         )
+        return  UserViewHolder(binding)
     }
 
+    var onClickLikeBtn : ((User)->Unit)? = null
+
     override fun onBindViewHolder(holder: UserViewHolder, position: Int) {
-        getItem(position)?.let{
-            holder.bind(it,position)
+        getItem(position)?.let {
+            holder.bind(it, onClickLikeBtn)
         }
     }
 
-    object DiffCallback : DiffUtil.ItemCallback<User>(){
+
+
+    object DiffCallback : DiffUtil.ItemCallback<User>() {
         override fun areItemsTheSame(oldItem: User, newItem: User): Boolean =
             oldItem.login == newItem.login
 
         override fun areContentsTheSame(oldItem: User, newItem: User): Boolean =
-            oldItem==newItem
+            oldItem == newItem
     }
 
 }

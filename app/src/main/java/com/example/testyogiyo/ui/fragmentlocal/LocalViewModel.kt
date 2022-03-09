@@ -1,27 +1,21 @@
-package com.example.testyogiyo.ui.fragmentapi
+package com.example.testyogiyo.ui.fragmentlocal
 
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.testyogiyo.data.database.entity.UserEntity
 import com.example.testyogiyo.data.database.repository.LocalUserRepository
-import com.example.testyogiyo.data.database.repository.LocalUserRepositoryImpl
 import com.example.testyogiyo.data.meta.ResultState
-import com.example.testyogiyo.data.remote.repository.UserRepository
-import com.example.testyogiyo.data.remote.response.GitResponse
 import com.example.testyogiyo.data.remote.response.User
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ApiViewModel @Inject constructor(
-    private val userRepository: UserRepository,
+class LocalViewModel @Inject constructor(
     private val localUserRepository: LocalUserRepository
 ) : ViewModel(){
 
@@ -31,13 +25,15 @@ class ApiViewModel @Inject constructor(
     private var _errorMsg : String? = ""
     val errorMsg get() = _errorMsg
 
-    fun findUserFromRemoteRepository(id : String) = viewModelScope.launch{
-        userRepository.getSearchUser(id).collectLatest {
+    fun getUserFromLocal(id : String) = viewModelScope.launch{
+        localUserRepository.findUser(id).collectLatest{
             when(it){
-                is ResultState.Loading ->{_resultState.value = ResultState.Loading}
-                is ResultState.Error -> { _errorMsg = it.message }
-                is ResultState.Success ->{
-                    _resultState.value = ResultState.Success(it.data?.items)
+                is ResultState.Loading -> { _resultState.value = it }
+                is ResultState.Error ->{ _errorMsg = it.message }
+                is ResultState.Success->{
+                    _resultState.value = ResultState.Success(it.data?.map{
+                        it.toUserFromUserEntity()
+                    })
                 }
             }
         }
@@ -47,15 +43,16 @@ class ApiViewModel @Inject constructor(
         localUserRepository.insertUser(user.toEntityFromUser())
         getAllUser()
     }
-
     fun deleteUserFromLocal(id : String) = viewModelScope.launch{
         localUserRepository.deleteUser(id)
         getAllUser()
     }
-
     fun getAllUser() = viewModelScope.launch{
+
         localUserRepository.getAllUser().collect {
             Log.d("sechan", "getAllUser: $it")
         }
+
+
     }
 }
