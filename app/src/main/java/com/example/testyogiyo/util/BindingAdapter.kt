@@ -3,6 +3,7 @@ package com.example.testyogiyo.util
 import android.util.Log
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
+import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -22,6 +23,10 @@ fun <T> RecyclerView.setItems(resultState: ResultState<Any>?) {
     }
 }
 
+@BindingAdapter("setItems")
+fun <T> RecyclerView.setItems( data : LiveData<List<T>>){
+    (adapter as? ListAdapter<T, *>)?.submitList(data.value)
+}
 
 
 fun getGlideRequestOption(imageName: String) =

@@ -5,9 +5,14 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.viewModels
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.example.testyogiyo.databinding.FragmentApiBinding
+import com.example.testyogiyo.ui.MainActivity
+import com.example.testyogiyo.ui.MainViewModel
 import com.example.testyogiyo.ui.adapter.UserAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -16,6 +21,7 @@ import javax.inject.Inject
 class ApiFragment : Fragment() {
 
     private lateinit var binding :FragmentApiBinding
+    private val activityViewModel : MainViewModel by activityViewModels()
     private val viewModel : ApiViewModel by viewModels()
 
     @Inject
@@ -35,16 +41,19 @@ class ApiFragment : Fragment() {
 
         adapter.onClickLikeBtn = {
             when(it.isLike){
-                true -> viewModel.deleteUserFromLocal(it.login)
-                false -> viewModel.insertUserToLocal(it)
+                true -> activityViewModel.deleteUserFromLocal(it.login)
+                false -> activityViewModel.insertUserToLocal(it)
             }
         }
 
+        observeRemoteUserData()
         return binding.root
     }
 
-    fun findUserFromRemote(searchText : String){
-        viewModel.findUserFromRemoteRepository(searchText)
+    private fun observeRemoteUserData(){
+        activityViewModel.remoteUser.observe(viewLifecycleOwner){
+            viewModel.remoteUser.value=it
+        }
     }
 
     companion object {

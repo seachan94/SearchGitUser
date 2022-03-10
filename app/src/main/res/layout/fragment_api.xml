@@ -23,7 +23,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:listitem="@layout/list_item"
-        items = "@{vm.resultState}" />
+        setItems = "@{vm.remoteUser}" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
