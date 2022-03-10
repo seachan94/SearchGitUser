@@ -3,6 +3,7 @@ package com.example.testyogiyo.ui
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import androidx.activity.viewModels
 import androidx.lifecycle.*
 import com.example.testyogiyo.R
 import com.example.testyogiyo.databinding.ActivityMainBinding
@@ -17,7 +18,7 @@ import kotlinx.coroutines.flow.*
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding : ActivityMainBinding
-    val searchText = MutableStateFlow("")
+    private val viewModel : MainViewModel by viewModels()
 
     private val apiFragment by lazy { ApiFragment.newInstance() }
     private val localFragment by lazy{ LocalFragment.newInstance() }
@@ -29,7 +30,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         binding = ActivityMainBinding.inflate(layoutInflater).apply{
-            activity = this@MainActivity
+            vm = viewModel
             lifecycleOwner = this@MainActivity
         }
         setContentView(binding.root)
@@ -67,14 +68,22 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun observeSearchText()  = lifecycleScope.launchWhenResumed {
-        searchText.debounce(500L).collectLatest {
+        viewModel.searchText.debounce(500L).collectLatest {
             if(it.isNotEmpty()){
                 when(attachFragmentPosition){
-                    0-> apiFragment.findUserFromRemote(it)
-                    1->localFragment.findUserFromLocal(it)
+                    0-> { viewModel.getUserFromRemote(viewModel.searchText.value) }
+                    1->{ viewModel.getUserFromLocal(viewModel.searchText.value) }
                 }
             }
         }
-    }
 
+
+    }
+    fun print(tab : Int){
+        val TAG = "sechan"
+        Log.d(TAG, "print: tab : $tab")
+        Log.d(TAG, "print: all ${viewModel.allLocalUser}")
+        Log.d(TAG, "print: remote ${viewModel.remoteUser.value}")
+        Log.d(TAG, "print: local ${viewModel.localUsers.value}")
+    }
 }

@@ -11,4 +11,7 @@ data class User(
         login,
         avatar_url
     )
+
+    override fun equals(other: Any?): Boolean = (other as User).login == login
+
 }

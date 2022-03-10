@@ -6,8 +6,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import com.example.testyogiyo.databinding.FragmentLocalBinding
+import com.example.testyogiyo.ui.MainViewModel
 import com.example.testyogiyo.ui.adapter.UserAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -17,6 +19,7 @@ class LocalFragment : Fragment() {
 
     private lateinit var binding : FragmentLocalBinding
     private val viewModel : LocalViewModel by viewModels()
+    private val activityViewModel : MainViewModel by activityViewModels()
 
     @Inject
     lateinit var adapter : UserAdapter
@@ -31,17 +34,21 @@ class LocalFragment : Fragment() {
             lifecycleOwner = viewLifecycleOwner
             vm = viewModel
         }
+
         adapter.onClickLikeBtn = {
             when(it.isLike){
-                true -> viewModel.deleteUserFromLocal(it.login)
-                false -> viewModel.insertUserToLocal(it)
+                true -> activityViewModel.deleteUserFromLocal(it.login)
+                false -> activityViewModel.insertUserToLocal(it)
             }
         }
+        observeLocalUserData()
         return binding.root
     }
 
-    fun findUserFromLocal(searchId : String){
-        viewModel.getUserFromLocal(searchId)
+    private fun observeLocalUserData(){
+        activityViewModel.localUsers.observe(viewLifecycleOwner){
+            viewModel.localUserData.value = it
+        }
     }
 
     companion object {

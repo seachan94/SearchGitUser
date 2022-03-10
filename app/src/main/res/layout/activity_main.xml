@@ -6,8 +6,8 @@
     <data>
 
         <variable
-            name="activity"
-            type="com.example.testyogiyo.ui.MainActivity"/>
+            name="vm"
+            type="com.example.testyogiyo.ui.MainViewModel"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -22,7 +22,7 @@
             android:autofillHints="name"
             android:hint="아이디 입력"
             android:inputType="text"
-            android:text="@={activity.searchText}"
+            android:text="@={vm.searchText}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
