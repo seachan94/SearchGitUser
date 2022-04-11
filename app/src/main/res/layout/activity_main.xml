@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
         <variable
             name="vm"
             type="com.example.testyogiyo.ui.MainViewModel"/>
@@ -23,8 +22,17 @@
             android:hint="아이디 입력"
             android:inputType="text"
             android:text="@={vm.searchText}"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/searchBtn"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/searchBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/search"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/search_text"
             app:layout_constraintTop_toTopOf="parent" />
 
         <com.google.android.material.tabs.TabLayout
@@ -38,12 +46,12 @@
             <com.google.android.material.tabs.TabItem
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="API" />
+                android:text="@string/text_api" />
 
             <com.google.android.material.tabs.TabItem
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Local" />
+                android:text="@string/text_local" />
         </com.google.android.material.tabs.TabLayout>
 
         <androidx.fragment.app.FragmentContainerView

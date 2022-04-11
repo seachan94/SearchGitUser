@@ -8,7 +8,7 @@
     <data>
         <variable
             name="vm"
-            type="com.example.testyogiyo.ui.fragmentapi.ApiViewModel" />
+            type="com.example.testyogiyo.ui.MainViewModel" />
     </data>
 <androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"

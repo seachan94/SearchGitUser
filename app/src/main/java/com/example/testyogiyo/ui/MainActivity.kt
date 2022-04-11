@@ -3,6 +3,7 @@ package com.example.testyogiyo.ui
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import androidx.activity.viewModels
 import androidx.lifecycle.*
 import com.example.testyogiyo.R
@@ -11,7 +12,11 @@ import com.example.testyogiyo.ui.fragmentapi.ApiFragment
 import com.example.testyogiyo.ui.fragmentlocal.LocalFragment
 import com.google.android.material.tabs.TabLayout
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 
 
 @AndroidEntryPoint
@@ -32,10 +37,12 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater).apply{
             vm = viewModel
             lifecycleOwner = this@MainActivity
+            searchBtn.setOnClickListener{
+                clickSearchBtn(attachFragmentPosition)
+            }
         }
         setContentView(binding.root)
         fragmentLayout()
-        observeSearchText()
     }
 
     private fun fragmentLayout(){
@@ -67,23 +74,14 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun observeSearchText()  = lifecycleScope.launchWhenResumed {
-        viewModel.searchText.debounce(500L).collectLatest {
-            if(it.isNotEmpty()){
-                when(attachFragmentPosition){
-                    0-> { viewModel.getUserFromRemote(viewModel.searchText.value) }
-                    1->{ viewModel.getUserFromLocal(viewModel.searchText.value) }
-                }
+    private fun clickSearchBtn(position: Int){
+        when(position){
+            0->{
+                viewModel.getUserFromRemote(viewModel.searchText.value)
+            }
+            1->{
+                viewModel.getUserFromLocal(viewModel.searchText.value)
             }
         }
-
-
-    }
-    fun print(tab : Int){
-        val TAG = "sechan"
-        Log.d(TAG, "print: tab : $tab")
-        Log.d(TAG, "print: all ${viewModel.allLocalUser}")
-        Log.d(TAG, "print: remote ${viewModel.remoteUser.value}")
-        Log.d(TAG, "print: local ${viewModel.localUsers.value}")
     }
 }

@@ -11,7 +11,5 @@ import com.example.testyogiyo.data.database.dao.UserDao
     version = 1
 )
 abstract class UserInfoDatabase : RoomDatabase(){
-
     abstract val userDao : UserDao
-
 }

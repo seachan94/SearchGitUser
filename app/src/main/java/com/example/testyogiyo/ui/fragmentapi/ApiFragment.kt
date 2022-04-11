@@ -22,10 +22,8 @@ class ApiFragment : Fragment() {
 
     private lateinit var binding :FragmentApiBinding
     private val activityViewModel : MainViewModel by activityViewModels()
-    private val viewModel : ApiViewModel by viewModels()
 
-    @Inject
-    lateinit var adapter : UserAdapter
+    private val adapter by lazy{ UserAdapter() }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -36,7 +34,7 @@ class ApiFragment : Fragment() {
         binding.apply{
             lifecycleOwner = viewLifecycleOwner
             wordRecyclerview.adapter= adapter
-            vm = viewModel
+            vm = activityViewModel
         }
 
         adapter.onClickLikeBtn = {
@@ -46,15 +44,9 @@ class ApiFragment : Fragment() {
             }
         }
 
-        observeRemoteUserData()
         return binding.root
     }
 
-    private fun observeRemoteUserData(){
-        activityViewModel.remoteUser.observe(viewLifecycleOwner){
-            viewModel.remoteUser.value=it
-        }
-    }
 
     companion object {
        @JvmStatic
