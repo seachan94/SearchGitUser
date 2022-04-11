@@ -2,4 +2,7 @@
     <string name="app_name">testyogiyo</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="search">검색</string>
+    <string name="text_api">API</string>
+    <string name="text_local">Local</string>
 </resources>

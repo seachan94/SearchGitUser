@@ -18,7 +18,6 @@ import javax.inject.Inject
 class LocalFragment : Fragment() {
 
     private lateinit var binding : FragmentLocalBinding
-    private val viewModel : LocalViewModel by viewModels()
     private val activityViewModel : MainViewModel by activityViewModels()
 
     @Inject
@@ -32,23 +31,13 @@ class LocalFragment : Fragment() {
         binding = FragmentLocalBinding.inflate(inflater,container,false).apply{
             userRecyclerview.adapter = adapter
             lifecycleOwner = viewLifecycleOwner
-            vm = viewModel
+            vm = activityViewModel
         }
-
         adapter.onClickLikeBtn = {
-            when(it.isLike){
-                true -> activityViewModel.deleteUserFromLocal(it.login)
-                false -> activityViewModel.insertUserToLocal(it)
-            }
+            activityViewModel.deleteUserFromLocal(it.login)
         }
-        observeLocalUserData()
-        return binding.root
-    }
 
-    private fun observeLocalUserData(){
-        activityViewModel.localUsers.observe(viewLifecycleOwner){
-            viewModel.localUserData.value = it
-        }
+        return binding.root
     }
 
     companion object {

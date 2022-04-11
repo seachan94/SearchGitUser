@@ -25,6 +25,7 @@ fun <T> RecyclerView.setItems(resultState: ResultState<Any>?) {
 
 @BindingAdapter("setItems")
 fun <T> RecyclerView.setItems( data : LiveData<List<T>>){
+    Log.d("sechan", "setItems: ${data.value}")
     (adapter as? ListAdapter<T, *>)?.submitList(data.value)
 }
 

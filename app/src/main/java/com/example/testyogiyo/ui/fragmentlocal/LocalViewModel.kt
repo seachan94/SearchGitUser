@@ -15,14 +15,5 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class LocalViewModel @Inject constructor() : ViewModel(){
-
-    private var _resultState = MutableLiveData<ResultState<List<User>>>(ResultState.Success(
-        arrayListOf()))
-    val resultState : LiveData<ResultState<List<User>>> = _resultState
-
-    private var _errorMsg : String? = ""
-    val errorMsg get() = _errorMsg
-
-    val localUserData = MutableLiveData<List<User>>()
+class LocalViewModel @Inject constructor() : ViewModel() {
 }
