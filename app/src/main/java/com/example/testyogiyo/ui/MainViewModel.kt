@@ -67,6 +67,7 @@ class MainViewModel @Inject constructor(
         localUserRepository.insertUser(user.toEntityFromUser())
         allLocalUser.add(user)
         localUsers.value = allLocalUser
+        //git test
     }
 
 
