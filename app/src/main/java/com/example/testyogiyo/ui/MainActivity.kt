@@ -7,6 +7,7 @@ import android.view.View
 import androidx.activity.viewModels
 import androidx.lifecycle.*
 import com.example.testyogiyo.R
+import com.example.testyogiyo.data.remote.response.User
 import com.example.testyogiyo.databinding.ActivityMainBinding
 import com.example.testyogiyo.ui.fragmentapi.ApiFragment
 import com.example.testyogiyo.ui.fragmentlocal.LocalFragment
@@ -30,7 +31,7 @@ class MainActivity : AppCompatActivity() {
 
     //어떠한 Tab (fragment)가 attach 되어 있는지 확인 한다.
     private var attachFragmentPosition = 0
-
+    var test = 'a'
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -38,13 +39,27 @@ class MainActivity : AppCompatActivity() {
             vm = viewModel
             lifecycleOwner = this@MainActivity
             searchBtn.setOnClickListener{
-                clickSearchBtn(attachFragmentPosition)
+                //clickSearchBtn(attachFragmentPosition)
+                viewModel.insertUserToLocal(User(
+                    (test++).toString(),(test++).toString()
+                ))
+                viewModel.a()
             }
         }
         setContentView(binding.root)
         fragmentLayout()
+        testObserve()
     }
-
+    private fun testObserve(){
+        lifecycleScope.launchWhenStarted {
+            viewModel.testlocallUser.collect {
+                Log.d("sechan", "testObserve1: $it")
+            }
+            viewModel.test2.collectLatest {
+                Log.d("sechan", "testObserve: $it")
+            }
+        }
+    }
     private fun fragmentLayout(){
 
         supportFragmentManager.beginTransaction()
