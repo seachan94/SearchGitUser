@@ -48,4 +48,5 @@ fun ImageView.loadThumbnail(thumbnail: String?) {
         .apply(getGlideRequestOption(thumbnail))
         .transform(FitCenter(), RoundedCorners(30))
         .into(this)
+
 }

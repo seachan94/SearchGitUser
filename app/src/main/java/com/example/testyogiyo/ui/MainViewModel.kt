@@ -10,10 +10,9 @@ import com.example.testyogiyo.data.meta.ResultState
 import com.example.testyogiyo.data.remote.repository.UserRepository
 import com.example.testyogiyo.data.remote.response.User
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import java.lang.Exception
 import javax.inject.Inject
 
 @HiltViewModel
@@ -31,17 +30,24 @@ class MainViewModel @Inject constructor(
 
     val searchText = MutableStateFlow("")
 
-    private var allLocalUser = mutableListOf<User>()
+    private var allLocalUser = MutableStateFlow(mutableListOf<User>())
     var remoteUser = MutableLiveData(listOf<User>())
     var localUsers = MutableLiveData(listOf<User>())
+
+
+    var testlocallUser = allLocalUser.asStateFlow()
+
+    fun emitUserToLocal() = viewModelScope.launch {
+        allLocalUser.emit(allLocalUser.value.toMutableList())
+        //Log.d("sechan", "emitUserToLocal: ${testlocallUser.value}")
+    }
 
     init {
         getAllUserFromLocal()
     }
 
-
     fun getUserFromRemote(id: String) = viewModelScope.launch {
-        apiUserRepository.getSearchUser(id, allLocalUser).collectLatest {
+        apiUserRepository.getSearchUser(id, allLocalUser.value).collectLatest {
             when (it) {
                 is ResultState.Loading -> {
                     _resultState.value = ResultState.Loading
@@ -58,16 +64,16 @@ class MainViewModel @Inject constructor(
     }
 
     fun getUserFromLocal(id: String) {
-        localUsers.value = allLocalUser.filter {
+        localUsers.value = allLocalUser.value.filter {
             id.uppercase() == it.login.uppercase()
         }
     }
 
     fun insertUserToLocal(user: User) = viewModelScope.launch {
-        localUserRepository.insertUser(user.toEntityFromUser())
-        allLocalUser.add(user)
-        localUsers.value = allLocalUser
-        //git test
+        //localUserRepository.insertUser(user.toEntityFromUser())
+        allLocalUser.value.add(user)
+        localUsers.value = allLocalUser.value
+        emitUserToLocal()
     }
 
 
@@ -80,16 +86,28 @@ class MainViewModel @Inject constructor(
             }
             it
         }?.toList()
-        allLocalUser = allLocalUser.filterNot { it.login == id }.toMutableList()
+        allLocalUser.value = allLocalUser.value.filterNot { it.login == id }.toMutableList()
 
     }
 
     private fun getAllUserFromLocal() =
         viewModelScope.launch {
             localUserRepository.getAllUser().collect { users ->
-                allLocalUser = users.map { it.toUserFromUserEntity() }.toMutableList()
-                localUsers.value = allLocalUser
+                allLocalUser.value = users.map { it.toUserFromUserEntity() }.toMutableList()
+                localUsers.value = allLocalUser.value
             }
         }
+
+    val test1 = MutableStateFlow(listOf(1,2,3,4,5,6,7))
+    val test2 = test1.asStateFlow()
+
+    fun a() = viewModelScope.launch{
+        test1.emit(
+            test1.value.filter{ it%2 == 0}.map{
+                it+1
+            }
+        )
+    }
+
 }
 
