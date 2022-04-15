@@ -1,23 +1,14 @@
 package com.example.testyogiyo.ui
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import android.view.View
 import androidx.activity.viewModels
-import androidx.lifecycle.*
+import androidx.appcompat.app.AppCompatActivity
 import com.example.testyogiyo.R
-import com.example.testyogiyo.data.remote.response.User
 import com.example.testyogiyo.databinding.ActivityMainBinding
 import com.example.testyogiyo.ui.fragmentapi.ApiFragment
 import com.example.testyogiyo.ui.fragmentlocal.LocalFragment
 import com.google.android.material.tabs.TabLayout
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
 
 
 @AndroidEntryPoint
@@ -31,6 +22,7 @@ class MainActivity : AppCompatActivity() {
 
     //어떠한 Tab (fragment)가 attach 되어 있는지 확인 한다.
     private var attachFragmentPosition = 0
+    val TAG = "sechan"
     var test = 'a'
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,27 +31,13 @@ class MainActivity : AppCompatActivity() {
             vm = viewModel
             lifecycleOwner = this@MainActivity
             searchBtn.setOnClickListener{
-                //clickSearchBtn(attachFragmentPosition)
-                viewModel.insertUserToLocal(User(
-                    (test++).toString(),(test++).toString()
-                ))
-                viewModel.a()
-            }
+                clickSearchBtn(attachFragmentPosition)
+          }
         }
         setContentView(binding.root)
         fragmentLayout()
-        testObserve()
     }
-    private fun testObserve(){
-        lifecycleScope.launchWhenStarted {
-            viewModel.testlocallUser.collect {
-                Log.d("sechan", "testObserve1: $it")
-            }
-            viewModel.test2.collectLatest {
-                Log.d("sechan", "testObserve: $it")
-            }
-        }
-    }
+
     private fun fragmentLayout(){
 
         supportFragmentManager.beginTransaction()

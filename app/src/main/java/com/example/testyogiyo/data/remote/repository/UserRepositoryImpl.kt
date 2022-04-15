@@ -28,7 +28,6 @@ class UserRepositoryImpl @Inject constructor(
             it
         }
 
-        Log.d("sechan", "getSearchUser: $checkedCompletedUser")
         emit(ResultState.Success(checkedCompletedUser))
     }.catch { e ->
         emit(ResultState.Error(error = e))

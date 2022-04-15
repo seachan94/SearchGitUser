@@ -39,7 +39,7 @@ class ApiFragment : Fragment() {
 
         adapter.onClickLikeBtn = {
             when(it.isLike){
-                true -> activityViewModel.deleteUserFromLocal(it.login)
+                true -> activityViewModel.deleteUserFromLocal(it)
                 false -> activityViewModel.insertUserToLocal(it)
             }
         }
