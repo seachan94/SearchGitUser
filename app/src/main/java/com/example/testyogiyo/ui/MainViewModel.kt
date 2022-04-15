@@ -38,16 +38,16 @@ class MainViewModel @Inject constructor(
     fun getUserFromRemote(id: String) = viewModelScope.launch {
         apiUserRepository.getSearchUser(id, allLocalUser.value).collectLatest {
             when (it) {
-                is ResultState.Loading -> {
-                    _resultState.value = ResultState.Loading
-                }
-                is ResultState.Error -> {
-                    _errorMsg = it.message
-                }
-                is ResultState.Success -> {
-                    _resultState.value = it
-                    remoteUser.value = it.data
-                }
+//                is ResultState.Loading -> {
+//                    _resultState.value = ResultState.Loading
+//                }
+//                is ResultState.Error -> {
+//                    _errorMsg = it.message
+//                }
+//                is ResultState.Success -> {
+//                    _resultState.value = it
+//                    remoteUser.value = it.data
+//                }
             }
         }
     }
