@@ -20,26 +20,26 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class ApiFragment : Fragment() {
 
-    private lateinit var binding :FragmentApiBinding
-    private val activityViewModel : MainViewModel by activityViewModels()
+    private lateinit var binding: FragmentApiBinding
+    private val activityViewModel: MainViewModel by activityViewModels()
 
-    private val adapter by lazy{ UserAdapter() }
+    private val adapter by lazy { UserAdapter() }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View? {
-        binding = FragmentApiBinding.inflate(inflater,container,false)
-        binding.apply{
+        binding = FragmentApiBinding.inflate(inflater, container, false)
+        binding.apply {
             lifecycleOwner = viewLifecycleOwner
-            wordRecyclerview.adapter= adapter
+            wordRecyclerview.adapter = adapter
             vm = activityViewModel
         }
 
         adapter.onClickLikeBtn = {
-            when(it.isLike){
-                true -> activityViewModel.deleteUserFromLocal(it.login)
+            when (it.isLike) {
+                true -> activityViewModel.deleteUserFromLocal(it)
                 false -> activityViewModel.insertUserToLocal(it)
             }
         }
@@ -49,8 +49,8 @@ class ApiFragment : Fragment() {
 
 
     companion object {
-       @JvmStatic
-        fun newInstance()=ApiFragment()
+        @JvmStatic
+        fun newInstance() = ApiFragment()
     }
 
 }

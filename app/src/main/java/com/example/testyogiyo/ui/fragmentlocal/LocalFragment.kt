@@ -34,7 +34,7 @@ class LocalFragment : Fragment() {
             vm = activityViewModel
         }
         adapter.onClickLikeBtn = {
-            activityViewModel.deleteUserFromLocal(it.login)
+            activityViewModel.deleteUserFromLocal(it)
         }
 
         return binding.root
