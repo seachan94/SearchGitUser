@@ -2,6 +2,8 @@ package com.example.testyogiyo.ui
 
 import android.util.Log
 import androidx.lifecycle.*
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import com.example.testyogiyo.data.database.repository.LocalUserRepository
 import com.example.testyogiyo.data.meta.ResultState
 import com.example.testyogiyo.data.remote.repository.UserRepository
@@ -23,8 +25,8 @@ class MainViewModel @Inject constructor(
     }
 
     private val _resultState =
-        MutableLiveData<ResultState<List<User>>>(ResultState.Success(listOf()))
-    val resultState: LiveData<ResultState<List<User>>> = _resultState
+        MutableLiveData<PagingData<User>>(PagingData.empty())
+    val resultState: LiveData<PagingData<User>> = _resultState
 
     private var _errorMsg: String? = ""
     val errorMsg = _errorMsg
@@ -36,20 +38,12 @@ class MainViewModel @Inject constructor(
     var localUsers = MutableLiveData(listOf<User>())
 
     fun getUserFromRemote(id: String) = viewModelScope.launch {
-        apiUserRepository.getSearchUser(id, allLocalUser.value).collectLatest {
-            when (it) {
-//                is ResultState.Loading -> {
-//                    _resultState.value = ResultState.Loading
-//                }
-//                is ResultState.Error -> {
-//                    _errorMsg = it.message
-//                }
-//                is ResultState.Success -> {
-//                    _resultState.value = it
-//                    remoteUser.value = it.data
-//                }
+        Log.d("sechan", "getUserFromRemote: ")
+        apiUserRepository.getSearchUser(id, allLocalUser.value)
+            .cachedIn(viewModelScope)
+            .collectLatest {
+                _resultState.value = it
             }
-        }
     }
 
     fun getUserFromLocal(id: String) {
