@@ -1,5 +1,6 @@
 package com.example.testyogiyo.data.source.paging
 
+import android.util.Log
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.example.testyogiyo.data.remote.GithubApi
@@ -22,13 +23,15 @@ class GitPagingSource(
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, User> =
         try{
-            val nextPageNumber = params.key ?: 1
-            val response = githubApi.getUser(searchText)
+            val pageNumber = params.key ?: 1
+            val response = githubApi.getUser(searchText, defaultDisplay,pageNumber)
+
             val data = checkLike(response,likedUsers)
+            Log.d("sechan", "load: $pageNumber ${data.isEmpty()}")
             LoadResult.Page(
                 data = data,
-                prevKey = null,
-                nextKey = nextPageNumber
+                prevKey = if(pageNumber ==1 ) null else pageNumber-1,
+                nextKey = if(data.isEmpty()) null else pageNumber+1
             )
         }catch (e : Exception){
             LoadResult.Error(e)

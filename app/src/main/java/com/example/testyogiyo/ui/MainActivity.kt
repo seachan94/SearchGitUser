@@ -1,6 +1,7 @@
 package com.example.testyogiyo.ui
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.example.testyogiyo.R
@@ -23,7 +24,6 @@ class MainActivity : AppCompatActivity() {
     //어떠한 Tab (fragment)가 attach 되어 있는지 확인 한다.
     private var attachFragmentPosition = 0
     val TAG = "sechan"
-    var test = 'a'
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -32,6 +32,7 @@ class MainActivity : AppCompatActivity() {
             lifecycleOwner = this@MainActivity
             searchBtn.setOnClickListener{
                 clickSearchBtn(attachFragmentPosition)
+
           }
         }
         setContentView(binding.root)

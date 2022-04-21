@@ -8,7 +8,9 @@ interface GithubApi {
 
     @GET("search/users")
     suspend fun getUser(
-        @Query("q") q: String
+        @Query("q") q: String,
+        @Query("per_page") per : Int,
+        @Query("page") page : Int
     ) : GitResponse
 
 }

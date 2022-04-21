@@ -39,14 +39,17 @@ class UserRepositoryImpl @Inject constructor(
     override fun getSearchUser(
         id: String,
         likedUser: MutableList<User>,
-    ): Flow<PagingData<User>> =
-        Pager(
+    ): Flow<PagingData<User>> {
+        Log.d("sechan", "getSearchUser repo: $id")
+        return Pager(
             config = PagingConfig(
                 pageSize = GitPagingSource.defaultDisplay,
-                enablePlaceholders = false
+                enablePlaceholders = false,
+                initialLoadSize = GitPagingSource.defaultDisplay
             ),
             pagingSourceFactory = {
-                GitPagingSource(githubApi, id,likedUser)
+                GitPagingSource(githubApi, id, likedUser)
             }
         ).flow
+    }
 }

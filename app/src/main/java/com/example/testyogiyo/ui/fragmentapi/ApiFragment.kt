@@ -10,11 +10,13 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.paging.map
 import com.example.testyogiyo.databinding.FragmentApiBinding
 import com.example.testyogiyo.ui.MainActivity
 import com.example.testyogiyo.ui.MainViewModel
 import com.example.testyogiyo.ui.adapter.UserAdapter
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -43,10 +45,16 @@ class ApiFragment : Fragment() {
                 false -> activityViewModel.insertUserToLocal(it)
             }
         }
-
+        observeData()
         return binding.root
     }
 
+    fun observeData() = activityViewModel.resultState.observe(viewLifecycleOwner) {
+        viewLifecycleOwner.lifecycleScope.launch {
+            adapter.submitData(it)
+            binding.wordRecyclerview.scrollToPosition(0)
+        }
+    }
 
     companion object {
         @JvmStatic
