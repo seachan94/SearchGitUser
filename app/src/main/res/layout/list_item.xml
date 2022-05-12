@@ -12,52 +12,52 @@
         android:id="@+id/card_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:cardCornerRadius="20dp"
-        android:elevation="10dp">
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:minHeight="100dp"
-        android:layout_margin="10dp"
-        >
+        android:elevation="10dp"
+        app:cardCornerRadius="20dp">
 
-        <ImageView
-            android:id="@+id/itemImage"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            imgUrl="@{data.avatar_url}"/>
-
-        <TextView
-            android:id="@+id/itemId"
-            android:layout_width="0dp"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@{data.login}"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@id/itemImage"
-            tools:text="홍길동"
-            android:layout_marginLeft="10dp" />
+            android:layout_margin="10dp"
+            android:minHeight="100dp">
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/itemLike"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:insetLeft="20dp"
-            android:insetTop="20dp"
-            android:insetRight="20dp"
-            android:insetBottom="20dp"
-            android:text="좋아요"
-            android:textSize="12sp"
-            android:backgroundTint="@{data.like? @color/purple_700: @color/gray}"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="좋아요" />
+            <ImageView
+                android:id="@+id/itemImage"
+                imgUrl="@{data.avatar_url}"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <TextView
+                android:id="@+id/itemId"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:text="@{data.login}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@id/itemImage"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="홍길동" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/itemLike"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@{data.like? @color/purple_700: @color/gray}"
+                android:gravity="center"
+                android:insetLeft="20dp"
+                android:insetTop="20dp"
+                android:insetRight="20dp"
+                android:insetBottom="20dp"
+                android:text="좋아요"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="좋아요" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 </layout>
