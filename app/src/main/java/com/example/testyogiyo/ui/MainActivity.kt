@@ -1,5 +1,7 @@
 package com.example.testyogiyo.ui
 
+import android.content.ComponentName
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.viewModels
@@ -32,7 +34,6 @@ class MainActivity : AppCompatActivity() {
             lifecycleOwner = this@MainActivity
             searchBtn.setOnClickListener{
                 clickSearchBtn(attachFragmentPosition)
-
           }
         }
         setContentView(binding.root)
