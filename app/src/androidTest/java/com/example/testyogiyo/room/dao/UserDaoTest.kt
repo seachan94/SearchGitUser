@@ -4,13 +4,14 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.example.testyogiyo.data.database.UserInfoDatabase
 import com.example.testyogiyo.data.database.dao.UserDao
 import com.example.testyogiyo.data.database.entity.UserEntity
+import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
-import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.runBlocking
-import org.junit.*
-import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.BeforeEach
+import org.junit.After
+import org.junit.Before
+import org.junit.Rule
+import org.junit.Test
 import org.junit.jupiter.api.DisplayName
 import javax.inject.Inject
 import javax.inject.Named
@@ -52,7 +53,7 @@ class UserDaoTest {
 
         val users = dao.getAllUser()
         val result = users.contains(testUser) && users.contains(otherTestUser)
-        assertEquals(result,true)
+        assertThat(result).isTrue()
     }
 
     @DisplayName("USER DAO INSERT 테스트")
@@ -63,7 +64,7 @@ class UserDaoTest {
 
         val allTestUser = dao.getAllUser()
         val isContainTestUser = allTestUser.contains(testUser)
-        assertEquals(isContainTestUser,true)
+        assertThat(isContainTestUser).isTrue()
     }
 
     @DisplayName("USER DAO delete 테스트")
@@ -75,7 +76,7 @@ class UserDaoTest {
 
         val result = dao.getAllUser().contains(testUser)
 
-        assertEquals(result,false)
+        assertThat(result).isFalse()
 
     }
 
@@ -85,7 +86,7 @@ class UserDaoTest {
         val testUser = UserEntity("testid","testimg")
         dao.insertUser(testUser)
         val result = dao.findUser("testid").contains(testUser)
-        assertEquals(result,true)
+        assertThat(result).isTrue()
     }
 
     @DisplayName("해당 user가 없을 시 User 찾기")
@@ -93,9 +94,7 @@ class UserDaoTest {
     fun findUserIfUserIsNotInDB() = runBlocking {
         val testUser = UserEntity("testid","testimg")
         val result = dao.findUser("testid").contains(testUser)
-        assertEquals(result,false)
+        assertThat(result).isFalse()
     }
-
-
 
 }

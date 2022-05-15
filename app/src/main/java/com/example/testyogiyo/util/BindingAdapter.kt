@@ -31,6 +31,7 @@ fun <T> RecyclerView.setItems( data : LiveData<List<T>>){
 
 fun getGlideRequestOption(imageName: String) =
     RequestOptions()
+        .skipMemoryCache(false)
         .diskCacheStrategy(DiskCacheStrategy.ALL)
         .signature(ObjectKey(imageName))
         .override(1024, 2048)
