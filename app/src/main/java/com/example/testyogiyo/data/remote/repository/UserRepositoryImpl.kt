@@ -40,7 +40,6 @@ class UserRepositoryImpl @Inject constructor(
         id: String,
         likedUser: MutableList<User>,
     ): Flow<PagingData<User>> {
-        Log.d("sechan", "getSearchUser repo: $id")
         return Pager(
             config = PagingConfig(
                 pageSize = GitPagingSource.defaultDisplay,

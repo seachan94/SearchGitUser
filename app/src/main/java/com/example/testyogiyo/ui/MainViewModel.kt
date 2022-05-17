@@ -20,10 +20,6 @@ class MainViewModel @Inject constructor(
     private val localUserRepository: LocalUserRepository,
 ) : ViewModel() {
 
-    init {
-        getAllUserFromLocal()
-    }
-
     private val _resultState =
         MutableLiveData<PagingData<User>>(PagingData.empty())
     val resultState: LiveData<PagingData<User>> = _resultState
@@ -37,8 +33,9 @@ class MainViewModel @Inject constructor(
     var remoteUser = MutableLiveData(listOf<User>())
     var localUsers = MutableLiveData(listOf<User>())
 
+    init { getAllUserFromLocal() }
+
     fun getUserFromRemote(id: String) = viewModelScope.launch {
-        Log.d("sechan", "getUserFromRemote: ")
         apiUserRepository.getSearchUser(id, allLocalUser.value)
             .cachedIn(viewModelScope)
             .collectLatest {
@@ -55,6 +52,7 @@ class MainViewModel @Inject constructor(
     fun insertUserToLocal(user: User) = viewModelScope.launch {
         localUserRepository.insertUser(user.toEntityFromUser())
         allLocalUser.value.add(user)
+        localUsers.value = allLocalUser.value
     }
 
     fun deleteUserFromLocal(user: User) = viewModelScope.launch {
@@ -68,7 +66,7 @@ class MainViewModel @Inject constructor(
         allLocalUser.value.remove(user)
     }
 
-    private fun getAllUserFromLocal() =
+    fun getAllUserFromLocal() =
         viewModelScope.launch {
             localUserRepository.getAllUser().collect { users ->
                 allLocalUser.value = users.map { it.toUserFromUserEntity() }.toMutableList()
