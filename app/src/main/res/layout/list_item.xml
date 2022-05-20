@@ -6,7 +6,7 @@
     <data>
         <variable
             name="data"
-            type="com.example.testyogiyo.data.remote.response.User" />
+            type="com.example.searchgituser.data.remote.response.User" />
     </data>
     <androidx.cardview.widget.CardView
         android:id="@+id/card_view"

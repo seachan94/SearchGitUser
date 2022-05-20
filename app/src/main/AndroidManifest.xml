@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.testyogiyo">
+    package="com.example.searchgituser">
 
     <uses-permission android:name="android.permission.INTERNET"/>
     <application
-        android:name=".TestApplication"
+        android:name="com.example.searchgituser.TestApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -12,7 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Testyogiyo">
         <activity
-            android:name=".ui.MainActivity"
+            android:name="com.example.searchgituser.ui.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
