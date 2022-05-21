@@ -26,7 +26,7 @@ class GitPagingSource(
             val response = githubApi.getUser(searchText, defaultDisplay,pageNumber)
 
             val data = checkLike(response,likedUsers)
-            Log.d("sechan", "load: $pageNumber ${data.isEmpty()}")
+
             LoadResult.Page(
                 data = data,
                 prevKey = if(pageNumber ==1 ) null else pageNumber-1,
