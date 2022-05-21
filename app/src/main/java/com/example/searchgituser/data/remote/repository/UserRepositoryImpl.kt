@@ -13,22 +13,7 @@ import javax.inject.Inject
 class UserRepositoryImpl @Inject constructor(
     private val githubApi: GithubApi,
 ) : UserRepository {
-    //    override fun getSearchUser(
-//        id: String,
-//        likedUser: MutableList<User>,
-//    ): Flow<ResultState<List<User>>> = flow {
-//        emit(ResultState.Loading)
-//        val response = githubApi.getUser(id)
-//
-//        val checkedCompletedUser = response.items.map {
-//            if(likedUser.contains(it)){ it.isLike = true }
-//            it
-//        }
-//
-//        emit(ResultState.Success(checkedCompletedUser))
-//    }.catch { e ->
-//        emit(ResultState.Error(error = e))
-//    }
+
     override fun getSearchUser(
         id: String,
         likedUser: MutableList<User>,

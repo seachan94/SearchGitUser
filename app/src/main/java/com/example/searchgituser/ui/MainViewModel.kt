@@ -32,13 +32,14 @@ class MainViewModel @Inject constructor(
 
     init { getAllUserFromLocal() }
 
-    fun getUserFromRemote(id: String) = viewModelScope.launch {
-        apiUserRepository.getSearchUser(id, allLocalUser.value)
-            .cachedIn(viewModelScope)
-            .collectLatest {
-                _resultState.value = it
-            }
-    }
+    fun getUserFromRemote(id: String) =
+        viewModelScope.launch {
+            apiUserRepository.getSearchUser(id, allLocalUser.value)
+                .cachedIn(viewModelScope)
+                .collectLatest {
+                    _resultState.value = it
+                }
+        }
 
     fun getUserFromLocal(id: String) {
         localUsers.value = allLocalUser.value.filter {

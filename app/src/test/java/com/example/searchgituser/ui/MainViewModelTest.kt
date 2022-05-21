@@ -1,12 +1,16 @@
 package com.example.searchgituser.ui
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.paging.AsyncPagingDataDiffer
 import androidx.paging.PagingData
+import androidx.recyclerview.widget.DiffUtil
 import com.example.searchgituser.CoroutinesTestExtension
 import com.example.searchgituser.InstantExecutorExtension
 import com.example.searchgituser.data.database.entity.UserEntity
 import com.example.searchgituser.data.database.repository.LocalUserRepository
+import com.example.searchgituser.data.remote.GithubApi
 import com.example.searchgituser.data.remote.repository.UserRepository
+import com.example.searchgituser.data.remote.response.GitResponse
 import com.example.searchgituser.data.remote.response.User
 import com.example.searchgituser.util.getOrAwaitValue
 import com.google.common.truth.Truth.assertThat
@@ -18,6 +22,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import org.mockito.ArgumentMatchers
 import org.mockito.Mockito.*
 
 
@@ -28,8 +33,6 @@ import org.mockito.Mockito.*
 )
 class MainViewModelTest {
 
-    @get:Rule
-    var instantTaskExecutorRule = InstantTaskExecutorRule()
     private lateinit var viewModel: MainViewModel
 
     private var apiRepository = mock(UserRepository::class.java)
@@ -39,8 +42,8 @@ class MainViewModelTest {
     @BeforeEach
     fun setUp() = runBlocking {
         val testList = listOf<UserEntity>()
-        val flow = flow { emit(testList) }
-        `when`(localUserRepository.getAllUser()).thenReturn(flow)
+        `when`(localUserRepository.getAllUser())
+            .thenReturn(flowOf(testList))
         viewModel = MainViewModel(apiRepository, localUserRepository)
     }
 
@@ -49,9 +52,9 @@ class MainViewModelTest {
     fun getAllUserFromDBAndSetallLocalUser() = runBlocking {
         val testList = listOf(UserEntity("1", "testimg"), UserEntity("2", "testImg2"))
         val result = testList.map { it.toUserFromUserEntity() }
-        val flow = flow { emit(testList) }
 
-        `when`(localUserRepository.getAllUser()).thenReturn(flow)
+        `when`(localUserRepository.getAllUser())
+            .thenReturn(flowOf(testList))
         viewModel.getAllUserFromLocal()
         assertThat(viewModel.allLocalUser.value).isEqualTo(result)
     }
@@ -62,9 +65,11 @@ class MainViewModelTest {
     fun getAllUserFromDBAndSetlocalUsers() = runBlocking {
         val testList = listOf(UserEntity("1", "testimg"), UserEntity("2", "testImg2"))
         val result = testList.map { it.toUserFromUserEntity() }
-        val flow = flow { emit(testList) }
 
-        `when`(localUserRepository.getAllUser()).thenReturn(flow)
+
+        `when`(localUserRepository.getAllUser())
+            .thenReturn(flowOf(testList))
+
         viewModel.getAllUserFromLocal()
 
         assertThat(
@@ -109,14 +114,32 @@ class MainViewModelTest {
 
     @DisplayName("서버에서 데이터 받아 resultState에 잘 적용하는지 테스트")
     @Test
-    fun setResultStateFromServerTest(){
+    fun setResultStateFromServerTest()= runBlocking{
         val data = PagingData.from(listOf(User("test","test")))
 
-        `when`(apiRepository.getSearchUser("test", mutableListOf()))
+        `when`(apiRepository.getSearchUser(anyString(), anyList()))
             .thenReturn(flowOf(data))
 
-        viewModel.getUserFromRemote("asd")
+        viewModel.getUserFromRemote("test")
 
-        println(viewModel.resultState.getOrAwaitValue()== PagingData.empty<User>())
+        println(viewModel.resultState.getOrAwaitValue() == data)
+
+        val differ = AsyncPagingDataDiffer(
+            diffCallback = DiffcallbackTest(),
+            workerDispatcher = Dispatchers.Main
+        )
     }
+
+
+}
+
+class DiffcallbackTest : DiffUtil.ItemCallback<User>(){
+    override fun areItemsTheSame(oldItem: User, newItem: User): Boolean {
+        return oldItem.avatar_url == newItem.avatar_url
+    }
+
+    override fun areContentsTheSame(oldItem: User, newItem: User): Boolean {
+        return oldItem == newItem
+    }
+
 }
