@@ -4,6 +4,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.paging.AsyncPagingDataDiffer
 import androidx.paging.PagingData
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListUpdateCallback
 import com.example.searchgituser.CoroutinesTestExtension
 import com.example.searchgituser.InstantExecutorExtension
 import com.example.searchgituser.data.database.entity.UserEntity
@@ -17,7 +18,9 @@ import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.test.*
 import org.junit.Rule
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -32,20 +35,19 @@ import org.mockito.Mockito.*
     InstantExecutorExtension::class
 )
 class MainViewModelTest {
-
     private lateinit var viewModel: MainViewModel
-
     private var apiRepository = mock(UserRepository::class.java)
     private var localUserRepository = mock(LocalUserRepository::class.java)
 
-
     @BeforeEach
     fun setUp() = runBlocking {
+
         val testList = listOf<UserEntity>()
         `when`(localUserRepository.getAllUser())
             .thenReturn(flowOf(testList))
         viewModel = MainViewModel(apiRepository, localUserRepository)
     }
+
 
     @DisplayName("DB로 부터 모든 User정보 가져와 allLocalUser 변수 적용 하는지에 대한 테스트")
     @Test
@@ -62,7 +64,7 @@ class MainViewModelTest {
 
     @DisplayName("DB로 부터 모든 User 정보 받아와 localUsers에 적용하는지 테스트")
     @Test
-    fun getAllUserFromDBAndSetlocalUsers() = runBlocking {
+    fun getAllUserFromDBAndSetlocalUsers() = runTest {
         val testList = listOf(UserEntity("1", "testimg"), UserEntity("2", "testImg2"))
         val result = testList.map { it.toUserFromUserEntity() }
 
@@ -71,7 +73,6 @@ class MainViewModelTest {
             .thenReturn(flowOf(testList))
 
         viewModel.getAllUserFromLocal()
-
         assertThat(
             viewModel.localUsers.getOrAwaitValue()
         ).isEqualTo(result)
@@ -112,34 +113,17 @@ class MainViewModelTest {
         assertThat(testUser.isLike).isFalse()
     }
 
+
     @DisplayName("서버에서 데이터 받아 resultState에 잘 적용하는지 테스트")
     @Test
     fun setResultStateFromServerTest()= runBlocking{
-        val data = PagingData.from(listOf(User("test","test")))
 
+        val data = PagingData.from(listOf(User("test","test")))
         `when`(apiRepository.getSearchUser(anyString(), anyList()))
             .thenReturn(flowOf(data))
-
         viewModel.getUserFromRemote("test")
+        assertThat(viewModel.resultState.getOrAwaitValue()).isNotEqualTo(PagingData.empty<User>())
 
-        println(viewModel.resultState.getOrAwaitValue() == data)
-
-        val differ = AsyncPagingDataDiffer(
-            diffCallback = DiffcallbackTest(),
-            workerDispatcher = Dispatchers.Main
-        )
-    }
-
-
-}
-
-class DiffcallbackTest : DiffUtil.ItemCallback<User>(){
-    override fun areItemsTheSame(oldItem: User, newItem: User): Boolean {
-        return oldItem.avatar_url == newItem.avatar_url
-    }
-
-    override fun areContentsTheSame(oldItem: User, newItem: User): Boolean {
-        return oldItem == newItem
     }
 
 }
