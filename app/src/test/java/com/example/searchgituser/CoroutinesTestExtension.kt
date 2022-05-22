@@ -12,16 +12,13 @@ class CoroutinesTestExtension(
     private val dispatcher: TestDispatcher = UnconfinedTestDispatcher()
 ) : BeforeEachCallback, AfterEachCallback {
 
-    /**
-     * Set TestCoroutine dispatcher as main
-     */
-    override fun beforeEach(context: ExtensionContext?) {
 
+    override fun beforeEach(context: ExtensionContext?) {
         Dispatchers.setMain(dispatcher)
     }
 
     override fun afterEach(context: ExtensionContext?) {
-
         Dispatchers.resetMain()
     }
+
 }
